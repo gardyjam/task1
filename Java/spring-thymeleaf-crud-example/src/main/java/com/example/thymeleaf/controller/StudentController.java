@@ -42,12 +42,6 @@ public class StudentController {
             return "new-student";
         }
 
-        // validate input
-        if (containsUnsafeInput(studentDTO, result)) {
-            attributes.addFlashAttribute("error", "User not registered...");
-            return "new-student";
-        }
-
         this.studentService.save(StudentMapper.toEntity(studentDTO));
         attributes.addFlashAttribute("message", "User registered successfully!");
         return "redirect:/students";
@@ -67,12 +61,6 @@ public class StudentController {
             return "edit-student";
         }
 
-        // validate input
-        if (containsUnsafeInput(studentDTO, result)) {
-            attributes.addFlashAttribute("error", "User not registered...");
-            return "edit-student";
-        }
-
         this.studentService.update(id, StudentMapper.toEntity(studentDTO));
         attributes.addFlashAttribute("message", "User updated successfully!");
         return "redirect:/students";
@@ -85,32 +73,4 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    // VALIDATE INPUT
-    private boolean containsUnsafeInput(CreateStudentDTO dto, BindingResult result) {
-        return isUnsafe("name", dto.getName(), result) ||
-                isUnsafe("email", dto.getEmail(), result) ||
-                isUnsafe("zipCode", dto.getZipCode(), result) ||
-                isUnsafe("street", dto.getStreet(), result) ||
-                isUnsafe("number", dto.getNumber(), result) ||
-                isUnsafe("complement", dto.getComplement(), result) ||
-                isUnsafe("district", dto.getDistrict(), result) ||
-                isUnsafe("city", dto.getCity(), result) ||
-                isUnsafe("state", dto.getState(), result);
-    }
-
-    private boolean isUnsafe(String field, String value, BindingResult result) {
-        if (value == null)
-            return false;
-
-        String lower = value.toLowerCase();
-        if (lower.contains("<") || lower.contains(">") ||
-                lower.contains("script") || lower.contains("onerror") ||
-                lower.contains("onload") || lower.contains("javascript:")) {
-
-            result.rejectValue(field, "xss.detected", "Field contains invalid or unsafe content.");
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
