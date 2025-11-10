@@ -1,7 +1,9 @@
 package com.example.thymeleaf.dto;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.BindingResult;
 
@@ -48,9 +50,8 @@ public class CreateStudentDTO {
     private String state;
 
     // VALIDATE INPUT
-    // @AssertFalse(message = "Input contains unsafe or invalid content.")
-    @AssertFalse(message = "Input contains unsafe content.")
-    private boolean containsUnsafeInput() {
+    @AssertFalse(message = "Input contains unsafe or invalid content.")
+    public boolean isUnsafeInput() {
         return isUnsafe(name) ||
                 isUnsafe(email) ||
                 isUnsafe(zipCode) ||
@@ -63,8 +64,7 @@ public class CreateStudentDTO {
     }
 
     private boolean isUnsafe(String value) {
-        if (value == null)
-            return false;
+        if (value == null) { return false; }
 
         String lower = value.toLowerCase();
         if (lower.contains("<") || lower.contains(">") ||

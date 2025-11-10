@@ -1,5 +1,6 @@
 package com.example.thymeleaf;
 
+import static javax.validation.Validation.buildDefaultValidatorFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ public class StudentTests {
 
     @BeforeEach
     void setup() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        ValidatorFactory factory = buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }
 
